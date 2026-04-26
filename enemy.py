@@ -3,9 +3,7 @@ import random
 
 
 class Enemy:
-    def __init__(
-        self, x, y, size, speed, color, screen_width, screen_height, level=2
-    ):
+    def __init__(self, x, y, size, speed, color, screen_width, screen_height, level=2):
         self.x = x
         self.y = y
         self.size = size
@@ -25,7 +23,13 @@ class Enemy:
         self.screen_wrap()
 
     def get_rect(self):
-        return pygame.Rect(self.x, self.y, self.size, self.size)
+        hitbox_size = self.size * 0.6
+        return pygame.Rect(
+            self.x - hitbox_size / 2,
+            self.y - hitbox_size / 2,
+            hitbox_size,
+            hitbox_size,
+        )
 
     def move(self, dt):
         self.y -= self.speed * dt

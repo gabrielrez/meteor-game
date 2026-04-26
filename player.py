@@ -16,22 +16,26 @@ class Player:
 
     def update(self, dt, keys):
         self.move(dt, keys)
-        self.screen_wrap()
         self.time_since_last_shoot += dt
 
     def get_rect(self):
-        return pygame.Rect(self.x, self.y, self.size, self.size)
+        hitbox_size = self.size * 0.6
+        offset = (self.size - hitbox_size) / 2
+        return pygame.Rect(self.x + offset, self.y + offset, hitbox_size, hitbox_size)
 
     def move(self, dt, keys):
         vector_x = 0
         vector_y = 0
 
         if keys[pygame.K_RIGHT]:
-            vector_x += 1
+            if not self.x > self.screen_width - self.size:
+                vector_x += 1
         if keys[pygame.K_LEFT]:
-            vector_x -= 1
+            if not self.x < 0:
+                vector_x -= 1
         if keys[pygame.K_DOWN]:
-            vector_y += 1
+            if not self.y > self.screen_height - self.size:
+                vector_y += 1
         if keys[pygame.K_UP]:
             if not self.y < 0:
                 vector_y -= 1
@@ -45,19 +49,13 @@ class Player:
         self.x += vector_x * self.speed * dt
         self.y += vector_y * self.speed * dt
 
-    def screen_wrap(self):
-        if self.x > self.screen_width + self.size:
-            self.x = 0
-        if self.x < -self.size:
-            self.x = self.screen_width + self.size
-
     def shoot(self):
         if self.time_since_last_shoot >= self.shoot_cooldown:
             self.time_since_last_shoot = 0
             return Bullet(
                 self.x + self.size / 2 - 5,
                 self.y,
-                15,
+                20,
                 45,
                 1500,
                 (255, 255, 0),
